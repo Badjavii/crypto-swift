@@ -1,6 +1,5 @@
 #ifndef ENCRIPTACION_H
 #define ENCRIPTACION_H
-#include <fstream>
 #include <string>
 using namespace std;
 

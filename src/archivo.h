@@ -2,10 +2,15 @@
 #define ARCHIVO_H
 #include <fstream>
 #include <string>
+#include "encriptacion.h"
 using namespace std;
 
 string generarNombreCopia(int n){
     return "copia" + to_string(n) + ".txt";
+}
+
+string generarNombreCopiaEncriptada(string nombre){
+    return "encriptado_" + nombre;
 }
 
 void generarCopia(string archivoNombre, int n){
@@ -22,5 +27,21 @@ void generarCopia(string archivoNombre, int n){
         copia.close();
     }
 }
+
+void encriptarArchivo(string nombreArchivoEntrada) {
+    ifstream entrada(nombreArchivoEntrada);
+    ofstream salida(generarNombreCopiaEncriptada(nombreArchivoEntrada));
+
+    if (entrada.is_open() && salida.is_open()) {
+        string linea;
+        while (getline(entrada, linea)) {
+            string lineaEncriptada = encriptarLinea(linea);
+            salida << lineaEncriptada << endl;
+        }
+        entrada.close();
+        salida.close();
+    }
+}
+
 
 #endif // ARCHIVO_H
