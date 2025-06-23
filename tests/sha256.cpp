@@ -23,9 +23,17 @@ int main()
 
     sha256 contexto;
     string hash = contexto.sha_return(mensaje);
+    
 
     cout << "Mensaje: " << mensaje << endl;
     cout << "Hash SHA-256: " << hash << endl;
+    
+    const char *mensaje_manipulado = "Hola Mundo AAA";
+    
+    hash = contexto.sha_return(mensaje_manipulado);
+    
+    cout << "Mensaje manipulado: " << mensaje_manipulado << endl;
+    cout << "Hash SHA-256 manipulado : " << hash << endl;
 
     return 0;
 }

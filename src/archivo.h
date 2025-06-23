@@ -43,5 +43,7 @@ void encriptarArchivo(string nombreArchivoEntrada) {
     }
 }
 
+void desencriptarArchivo()
+
 
 #endif // ARCHIVO_H
