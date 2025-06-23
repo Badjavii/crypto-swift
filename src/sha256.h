@@ -17,7 +17,11 @@
 
 #ifndef SHA256_H
 #define SHA256_H
+#include <iostream>
+#include <iomanip> // para std::setw y std::setfill
+#include <sstream> // para std::ostringstream
 #include <memory.h>
+using namespace std;
 
 /**
  * @typedef BYTE
@@ -335,31 +339,6 @@ private:
 		message.state[7] += h;
 	}
 
-public:
-	/**
-	 * @brief Constructor de la clase SHA256.
-	 *
-	 * Inicializa el objeto SHA256 llamando a `sha_init()` para configurar el estado inicial.
-	 */
-
-	sha256()
-	{
-		sha_init();
-	}
-
-	/**
-	 * @brief Obtiene la estructura de mensaje actual.
-	 *
-	 * Retorna una copia de la estructura `message` que contiene los datos y el estado actual del mensaje.
-	 *
-	 * @return Estructura `sha256_message` con el estado actual.
-	 */
-
-	sha256_message getMessage() const
-	{
-		return message;
-	}
-
 	/**
 	 * @brief Actualiza el estado de SHA-256 con nuevos datos.
 	 *
@@ -441,6 +420,55 @@ public:
 			hash[i + 24] = (message.state[6] >> (24 - i * 8)) & 0x000000ff;
 			hash[i + 28] = (message.state[7] >> (24 - i * 8)) & 0x000000ff;
 		}
+	}
+
+public:
+	/**
+	 * @brief Constructor de la clase SHA256.
+	 *
+	 * Inicializa el objeto SHA256 llamando a `sha_init()` para configurar el estado inicial.
+	 */
+
+	sha256()
+	{
+		sha_init();
+	}
+
+	/**
+	 * @brief Obtiene la estructura de mensaje actual.
+	 *
+	 * Retorna una copia de la estructura `message` que contiene los datos y el estado actual del mensaje.
+	 *
+	 * @return Estructura `sha256_message` con el estado actual.
+	 */
+
+	sha256_message getMessage() const
+	{
+		return message;
+	}
+
+	/**
+	 * @brief Computes the SHA-256 hash of the given input string and returns it as a hexadecimal string.
+	 *
+	 * This function initializes the SHA-256 context, processes the input string,
+	 * finalizes the hash computation, and converts the resulting hash bytes into
+	 * a hexadecimal string representation.
+	 *
+	 * @param input The input string to hash.
+	 * @return string The hexadecimal representation of the SHA-256 hash.
+	 */
+
+	string sha_return(const string &input)
+	{
+		BYTE hash[SHA256_SIZE];
+		sha_init();
+		sha_update(reinterpret_cast<const BYTE *>(input.c_str()), input.size());
+		sha_final(hash);
+
+		ostringstream oss;
+		for (int i = 0; i < SHA256_SIZE; i++)
+			oss << hex << setw(2) << setfill('0') << (int)hash[i];
+		return oss.str();
 	}
 };
 
