@@ -21,7 +21,7 @@ void mainSecuencial(int copias)
     cout << "==========================" << endl;
     cout << "PROCESO SECUENCIAL" << endl;
     cout << "==========================" << endl;
-    cout << "Tiempo Inicial: " << temporizador_principal.obtenerInicio() << endl;
+    cout << "Tiempo Inicial: " << temporizador_principal.formatoTextoInicio() << endl;
     cout << "==========================" << endl;
 
     cout << endl;
@@ -35,9 +35,10 @@ void mainSecuencial(int copias)
     cout << "==========================" << endl;
     cout << "FIN PROCESO SECUENCIAL" << endl;
     cout << "==========================" << endl;
-    cout << "Tiempo promedio: " << endl;
-    cout << "Tiempo Total:    " << temporizador_principal.obtenerFin() << endl;
+    cout << "Tiempo promedio:    " << endl;
+    cout << "Tiempo Total:       " << temporizador_principal.formatoTextoFin() << endl;
     cout << "==========================" << endl;
+    cout << "Tiempo en segundos: " << temporizador_principal.formatoTextoDuracion() << endl 
 }
 
 #endif // F06_MAIN_SECUENCIAL_H
