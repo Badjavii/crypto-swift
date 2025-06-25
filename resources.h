@@ -12,6 +12,7 @@
 #include <iomanip> // para std::setw y std::setfill
 #include <sstream> // para std::ostringstream
 #include <memory.h>
+#include <chrono>
 using namespace std;
 
 #endif // RESOURCES_H

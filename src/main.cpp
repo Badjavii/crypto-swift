@@ -1,7 +1,5 @@
-#include <iostream>
-#include <string>
-#include "F03_sha256.h"
-using namespace std;
+#include "../resources.h"
+#include "F06_main_secuencial.h"
 
 // PARA COPIA N = 1
 // 1- Copiar el contenido original.txt en copia1.txt
@@ -14,13 +12,16 @@ using namespace std;
 
 int main()
 {
-    const char *mensaje = "Hola Mundo";
+    int N = 0;
+    cout << "Indica el numero de copias a realizar (menor a 50): ";
+    cin >> N;
+    while (N < 1 || N > 50)
+    {
+        cout << "El numero debe ser entre 1 y 50. Intenta de nuevo: ";
+        cin >> N;
+    }
 
-    sha256 contexto;
-    string hash = contexto.sha_return(mensaje);
-
-    cout << "Mensaje: " << mensaje << endl;
-    cout << "Hash SHA-256: " << hash << endl;
+    mainSecuencial(N);
 
     return 0;
 }
