@@ -1,17 +1,22 @@
 /**
- * @file encriptacion.h
+ * @file F02_encriptacion.h
  * @brief Librería para encriptación y desencriptación de texto usando cifrado César y reflexión de dígitos.
  *
  * Este archivo contiene funciones para encriptar y desencriptar caracteres y líneas de texto.
  * La encriptación utiliza un cifrado César con un desplazamiento de 3 para letras y una reflexión
  * respecto a '9' para dígitos. La desencriptación invierte estas operaciones para recuperar el texto
  * original. Los caracteres no alfanuméricos se mantienen sin cambios en ambos procesos.
+ *
+ * Dependencias:
+ * - resources.h: Incluye librerías estándar de C++ (string, iostream, etc) para simplificar las inclusiones.
+ *
+ * @author badjavii
+ * @date 06-23-2025
  */
 
-#ifndef ENCRIPTACION_H
-#define ENCRIPTACION_H
-#include <string>
-using namespace std;
+#ifndef F02_ENCRIPTACION_H
+#define F02_ENCRIPTACION_H
+#include "../resources.h" // Importa las librerías estándar de C++ necesarias para la implementación
 
 /**
  * @brief Cifra un solo carácter usando un cifrado César con un desplazamiento de 3.
@@ -169,4 +174,4 @@ string desencriptarLinea(string linea)
     return linea_desencriptada;
 }
 
-#endif // ENCRIPTACION_H
+#endif // F02_ENCRIPTACION_H

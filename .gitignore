@@ -1,6 +1,7 @@
 # Ignorar todos los archivos de texto excepto original.txt
 *.txt
 !original.txt
+!origin.txt
 
 # Ignorar todos los archivos .json
 *.json

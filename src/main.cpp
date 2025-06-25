@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "sha256.h"
+#include "F03_sha256.h"
 using namespace std;
 
 // PARA COPIA N = 1

@@ -1,27 +1,29 @@
 /**
- * @file sha256.h
- * @brief Cabecera para la implementación del algoritmo SHA-256.
+ * @file F03_sha256.h
+ * @brief Librería para la implementación del algoritmo SHA-256.
  *
- * Este archivo contiene las definiciones, macros y clases necesarias para implementar
- * el algoritmo de hash seguro SHA-256, que genera un hash de 256 bits (32 bytes) a partir
- * de un mensaje de entrada.
+ * Proporciona clases, macros y definiciones para generar un hash de 256 bits (32 bytes)
+ * a partir de un mensaje de entrada utilizando el algoritmo SHA-256.
  *
- * @note Los operadores lógicos bit a bit utilizados en esta librería son:
- * - **&**: Conjunción (AND) – retorna 1 solo si ambos bits son 1.
- * - **|**: Disyunción (OR) – retorna 1 si al menos un bit es 1.
- * - **^**: Disyunción exclusiva (XOR) – retorna 1 si los bits son diferentes.
- * - **~**: Negación (NOT) – invierte todos los bits.
- * - **<<**: Desplazamiento a la izquierda – mueve bits y agrega ceros por la derecha.
- * - **>>**: Desplazamiento a la derecha – mueve bits a la derecha y completa con ceros.
+ * @details
+ * Los operadores lógicos bit a bit utilizados en esta librería son:
+ * - &: Conjunción (AND) – retorna 1 solo si ambos bits son 1.
+ * - ||: Disyunción (OR) – retorna 1 si al menos un bit es 1.
+ * - ^: Disyunción exclusiva (XOR) – retorna 1 si los bits son diferentes.
+ * - ~: Negación (NOT) – invierte todos los bits.
+ * - <: Desplazamiento a la izquierda – mueve bits y agrega ceros por la derecha.
+ * - >: Desplazamiento a la derecha – mueve bits a la derecha y completa con ceros.
+ *
+ * Dependencias:
+ * - resources.h: Incluye librerías estándar de C++ (string, iostream, etc) para simplificar las inclusiones.
+ *
+ * @author badjavii
+ * @date 06-23-2025
  */
 
-#ifndef SHA256_H
-#define SHA256_H
-#include <iostream>
-#include <iomanip> // para std::setw y std::setfill
-#include <sstream> // para std::ostringstream
-#include <memory.h>
-using namespace std;
+#ifndef F03_SHA256_H
+#define F03_SHA256_H
+#include "../resources.h" // Importa las librerías estándar de C++ necesarias para la implementación
 
 /**
  * @typedef BYTE
@@ -54,7 +56,7 @@ typedef unsigned int WORD;
  * @def ROTLEFT(a, b)
  * @brief Realiza una rotación circular a la izquierda de una palabra de 32 bits.
  *
- * Rota los bits de la palabra `a` hacia la izquierda por `b` posiciones, moviendo los bits
+ * Rota los bits de la palabra a hacia la izquierda por b posiciones, moviendo los bits
  * que salen por la izquierda hacia la derecha.
  *
  * @param a Palabra de 32 bits a rotar.
@@ -68,7 +70,7 @@ typedef unsigned int WORD;
  * @def ROTRIGHT(a, b)
  * @brief Realiza una rotación circular a la derecha de una palabra de 32 bits.
  *
- * Rota los bits de la palabra `a` hacia la derecha por `b` posiciones, moviendo los bits
+ * Rota los bits de la palabra a hacia la derecha por b posiciones, moviendo los bits
  * que salen por la derecha hacia la izquierda.
  *
  * @param a Palabra de 32 bits a rotar.
@@ -82,8 +84,8 @@ typedef unsigned int WORD;
  * @def CHOISE(x, y, z)
  * @brief Función lógica de selección condicional.
  *
- * Selecciona entre `y` y `z` según el valor de `x`. Si el bit de `x` es 1, retorna el bit
- * correspondiente de `y`; de lo contrario, retorna el bit de `z`.
+ * Selecciona entre y y z según el valor de x. Si el bit de x es 1, retorna el bit
+ * correspondiente de y; de lo contrario, retorna el bit de z.
  *
  * @param x Bit de control para la selección.
  * @param y Primer valor de entrada.
@@ -97,7 +99,7 @@ typedef unsigned int WORD;
  * @def MAJORITY(x, y, z)
  * @brief Función lógica de mayoría.
  *
- * Retorna el bit que representa la mayoría entre los bits correspondientes de `x`, `y` y `z`.
+ * Retorna el bit que representa la mayoría entre los bits correspondientes de x, y y z.
  * Es decir, retorna 1 si al menos dos de los tres bits son 1.
  *
  * @param x Primer valor de entrada.
@@ -113,7 +115,7 @@ typedef unsigned int WORD;
  * @brief Función de entropía para mezclar bits (Σ0).
  *
  * Aplica una combinación de rotaciones circulares a la derecha y operaciones XOR para
- * introducir entropía controlada en la palabra `x`. Utilizada en la transformación SHA-256.
+ * introducir entropía controlada en la palabra x. Utilizada en la transformación SHA-256.
  *
  * @param x Palabra de 32 bits a procesar.
  * @return Resultado de la mezcla.
@@ -126,7 +128,7 @@ typedef unsigned int WORD;
  * @brief Función de entropía para mezclar bits (Σ1).
  *
  * Similar a ENTROPY01, aplica rotaciones circulares a la derecha y operaciones XOR para
- * introducir entropía controlada en la palabra `x`. Utilizada en la transformación SHA-256.
+ * introducir entropía controlada en la palabra x. Utilizada en la transformación SHA-256.
  *
  * @param x Palabra de 32 bits a procesar.
  * @return Resultado de la mezcla.
@@ -211,7 +213,7 @@ enum registers
 struct sha256_message
 {
 	BYTE data[64];			   // Arreglo para almacenar un bloque de 64 bytes (512 bits) de datos del mensaje.
-	WORD datalen;			   // Cantidad de bytes almacenados en el arreglo `data`.
+	WORD datalen;			   // Cantidad de bytes almacenados en el arreglo data.
 	unsigned long long bitlen; // Longitud total del mensaje en bits.
 	WORD state[8];			   // Arreglo para almacenar los ocho registros de estado intermedio (32 bits cada uno).
 };
@@ -233,8 +235,8 @@ private:
 	/**
 	 * @brief Inicializa el estado del algoritmo SHA256.
 	 *
-	 * Configura los valores iniciales de la estructura `message` con los registros
-	 * predefinidos (`r1` a `r8`) y establece las longitudes de datoslen y bitlen a cero.
+	 * Configura los valores iniciales de la estructura message con los registros
+	 * predefinidos (r1 a r8) y establece las longitudes de datoslen y bitlen a cero.
 	 */
 	void sha_init()
 	{
@@ -254,7 +256,7 @@ private:
 	 * @brief Transforma un bloque de 64 bytes en el proceso SHA-256.
 	 *
 	 * Realiza la transformación de compresión SHA-256 en un bloque de 64 bytes de datos,
-	 * actualizando el estado intermedio almacenado en `message.state`.
+	 * actualizando el estado intermedio almacenado en message.state.
 	 *
 	 * @param[in] datos[] Arreglo de 64 bytes que contiene el bloque de datos a transformar.
 	 */
@@ -343,7 +345,7 @@ private:
 	 * @brief Actualiza el estado de SHA-256 con nuevos datos.
 	 *
 	 * Procesa un bloque de datos de entrada y actualiza el estado intermedio del algoritmo.
-	 * Los datos se acumulan en bloques de 64 bytes, y se aplica `sha_transform()` cuando
+	 * Los datos se acumulan en bloques de 64 bytes, y se aplica sha_transform() cuando
 	 * completa un bloque.
 	 *
 	 * @param[in] data[] Arreglo de bytes con los datos a procesar.
@@ -426,7 +428,7 @@ public:
 	/**
 	 * @brief Constructor de la clase SHA256.
 	 *
-	 * Inicializa el objeto SHA256 llamando a `sha_init()` para configurar el estado inicial.
+	 * Inicializa el objeto SHA256 llamando a sha_init() para configurar el estado inicial.
 	 */
 
 	sha256()
@@ -437,9 +439,9 @@ public:
 	/**
 	 * @brief Obtiene la estructura de mensaje actual.
 	 *
-	 * Retorna una copia de la estructura `message` que contiene los datos y el estado actual del mensaje.
+	 * Retorna una copia de la estructura message que contiene los datos y el estado actual del mensaje.
 	 *
-	 * @return Estructura `sha256_message` con el estado actual.
+	 * @return Estructura sha256_message con el estado actual.
 	 */
 
 	sha256_message getMessage() const
@@ -448,21 +450,21 @@ public:
 	}
 
 	/**
-	 * @brief Computes the SHA-256 hash of the given input string and returns it as a hexadecimal string.
+	 * @brief Calcula el hash SHA-256 de la cadena de entrada dada y lo devuelve como una cadena hexadecimal.
 	 *
-	 * This function initializes the SHA-256 context, processes the input string,
-	 * finalizes the hash computation, and converts the resulting hash bytes into
-	 * a hexadecimal string representation.
+	 * Esta función inicializa el contexto SHA-256, procesa la cadena de entrada,
+	 * finaliza el cálculo del hash y convierte los bytes del hash resultantes en
+	 * una representación de cadena hexadecimal.
 	 *
-	 * @param input The input string to hash.
-	 * @return string The hexadecimal representation of the SHA-256 hash.
+	 * @param mensaje La cadena de entrada a hash.
+	 * @return string La representación hexadecimal del hash SHA-256.
 	 */
 
-	string sha_return(const string &input)
+	string sha_return(const string &mensaje)
 	{
 		BYTE hash[SHA256_SIZE];
 		sha_init();
-		sha_update(reinterpret_cast<const BYTE *>(input.c_str()), input.size());
+		sha_update(reinterpret_cast<const BYTE *>(mensaje.c_str()), mensaje.size());
 		sha_final(hash);
 
 		ostringstream oss;
@@ -472,4 +474,4 @@ public:
 	}
 };
 
-#endif // SHA256_H
+#endif // F03_SHA256_H
