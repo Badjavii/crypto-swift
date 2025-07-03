@@ -5,6 +5,7 @@
 #include <optional>
 #include <iomanip>
 #include <sstream>
+#include <vector>
 
 class Temporizador
 {
@@ -12,13 +13,20 @@ private:
     Hora inicio;
     Hora fin;
     bool detenido;
+    vector<Hora> registro;
 
 public:
+
     //
     Temporizador()
     {
         inicio = Hora();
         detenido = false;
+        registro.push_back(inicio);
+    }
+
+    void registrar(){
+        registro.push_back(Hora());
     }
 
     void detener()
@@ -62,6 +70,10 @@ public:
             Hora ahora = Hora();
             return ahora.formatoTexto();
         }
+    }
+
+    vector<Hora> getRegistro(){
+        return registro;
     }
 
     string formatoTextoDuracion() const

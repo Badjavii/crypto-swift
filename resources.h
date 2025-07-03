@@ -13,6 +13,7 @@
 #include <sstream> // para std::ostringstream
 #include <memory.h>
 #include <chrono>
+#include <vector>
 using namespace std;
 
 #endif // RESOURCES_H
