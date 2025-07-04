@@ -1,14 +1,16 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <iomanip> // para std::setw y std::setfill
-#include <sstream> // para std::ostringstream
+#include <iomanip> // para setw y setfill
+#include <sstream> // para ostringstream
 #include <memory.h>
 #include <chrono>
 #include <mutex>
 #include <vector>
 #include <thread>
 #include <utility>
+#include <cctype> // Para validar si N es un valor con isdigit()
+#include <direct.h> // Para crear el directorio usando _mkdir
 using namespace std;
 
 /**
@@ -1120,14 +1122,28 @@ Temporizador mainParalelo(int copias)
 
 int main()
 {
-    int N = 0;
-    cout << "Indica el numero de copias a realizar (menor a 50): ";
-    cin >> N;
-    while (N < 1 || N > 50)
-    {
-        cout << "El numero debe ser entre 1 y 50. Intenta de nuevo: ";
-        cin >> N;
+    const string primerDirectorio = "secuencial";
+    const string segundoDirectorio = "paralelo";
+
+    // Crea el directorio
+    if (_mkdir(primerDirectorio.c_str()) != 0) {
+         cerr << "Error al crear el directorio: " << primerDirectorio << endl;
     }
+
+    if (_mkdir(segundoDirectorio.c_str()) != 0) {
+        cerr << "Error al crear el directorio: " << segundoDirectorio << endl;
+    }
+
+    string valor;
+    cout << "Indica el numero de copias a realizar (menor a 50): ";
+    getline(cin, valor);
+    while (!valor.isdigit())
+    {
+        cout << "Error. Ingrese un valor entero: ";
+        getline(cin, valor);
+    }
+
+    int N;
 
     Temporizador tiempoSecuencial = mainSecuencial(N);
     cout << endl;
