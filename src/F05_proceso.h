@@ -3,9 +3,8 @@
 #include "../resources.h"
 #include "F01_archivo.h"
 
-void proceso(int i)
+void proceso(const string rutaTrabajo, int i)
 {
-    const string rutaTrabajo = "file_workspace/";
     const string archivoOriginal = rutaTrabajo + "original.txt", extensionCopia = ".txt", extensionEncriptado = ".sha", extensionDesencriptado = ".des";
     string archivoCopia, archivoEncriptado, archivoDesencriptado;
     string hash1, hash2;

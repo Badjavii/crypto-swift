@@ -14,3 +14,9 @@
 
 # Ignorar todos los archivos gch
 *.gch
+
+# Ignorar todos los archivos de .sha
+*.sha
+
+# Ignorar todos los archivos de .des
+*.des

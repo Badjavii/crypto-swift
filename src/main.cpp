@@ -1,5 +1,6 @@
 #include "../resources.h"
 #include "F06_main_secuencial.h"
+#include "F07_main_paralelo.h"
 
 // PARA COPIA N = 1
 // 1- Copiar el contenido original.txt en copia1.txt
@@ -21,7 +22,19 @@ int main()
         cin >> N;
     }
 
-    mainSecuencial(N);
+    Temporizador tiempoSecuencial = mainSecuencial(N);
+    cout << endl;
+    Temporizador tiempoParalelo = mainParalelo(N);
+
+    double tiempoSec = tiempoSecuencial.duracionSegundos();
+    double tiempoPar = tiempoParalelo.duracionSegundos();
+
+    double mejora = ((tiempoSec - tiempoPar) / tiempoSec) * 100.0;
+
+    cout << fixed << setprecision(2);
+    cout << "================================" << endl;
+    cout << "PORCENTAJE DE MEJORA: " << mejora << " %" << endl;
+    cout << "================================" << endl;
 
     return 0;
 }
