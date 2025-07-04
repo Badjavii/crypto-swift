@@ -832,7 +832,7 @@ public:
         oss << setfill('0') << setw(2) << horas << ":"
             << setw(2) << minutos << ":"
             << setw(2) << segundos << ":"
-            << setw(3) << milisegundos;
+            << setw(4) << milisegundos;
         return oss.str();
     }
 
@@ -850,10 +850,11 @@ private:
     bool detenido;
     vector<Hora> registro;
 
-    string formatearDuracion(double t) const
+    
+
+public:
+	string formatearDuracion(double t) const
     {
-        if (t < 0)
-            t += 86400.0;
         int h = static_cast<int>(t / 3600);
         t -= h * 3600;
         int m = static_cast<int>(t / 60);
@@ -865,11 +866,10 @@ private:
         oss << setfill('0') << setw(2) << h << ":"
             << setw(2) << m << ":"
             << setw(2) << s << ":"
-            << setw(3) << ms;
+            << setw(4) << ms;
         return oss.str();
     }
-
-public:
+	
     //
     Temporizador()
     {
@@ -905,7 +905,7 @@ public:
             double t = registro[j].tiempoEnSegundos() - registro[i].tiempoEnSegundos();
             return formatearDuracion(t);
         }
-        return "00:00:00:000";
+        return "00:00:00:0000";
     }
 
     string tiempoTranscurrido() const
@@ -941,8 +941,7 @@ public:
     {
         int n = static_cast<int>(registro.size());
         if (n <= 2)
-            return "00:00:00:000";
-
+            return "00:00:00:0000";
         double total = 0.0;
         for (int i = 1; i < n - 1; ++i)
         {
@@ -970,7 +969,7 @@ public:
 
 void proceso(const string rutaTrabajo, int i)
 {
-    const string archivoOriginal = rutaTrabajo + "original.txt", extensionCopia = ".txt", extensionEncriptado = ".sha", extensionDesencriptado = ".des";
+    const string archivoOriginal = "original.txt", extensionCopia = ".txt", extensionEncriptado = ".sha", extensionDesencriptado = ".des";
     string archivoCopia, archivoEncriptado, archivoDesencriptado;
     string hash1, hash2;
     bool resultadoComparacion;
@@ -1007,11 +1006,11 @@ Temporizador mainSecuencial(int copias)
     Temporizador temporizador_principal;
     const string rutaTrabajo = "secuencial/";
 
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "    INICIO PROCESO SECUENCIAL   " << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "Tiempo Inicial:     " << temporizador_principal.formatoTextoInicio() << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << endl;
 
     for (int i = 1; i <= copias; i++)
@@ -1019,26 +1018,22 @@ Temporizador mainSecuencial(int copias)
         proceso(rutaTrabajo, i);
         temporizador_principal.registrar();
         string duracion = temporizador_principal.duracionEntre(i - 1, i);
+        cout << "TIEMPO PROCESO " << i << ": ";
         if (i < 10)
-        {
-            cout << "TIEMPO PROCESO " << i << ":  " << duracion << endl;
-        }
-        else
-        {
-            cout << "TIEMPO PROCESO " << i << ": " << duracion << endl;
-        }
-        cout << "--------------------------------" << endl;
+            cout << " ";
+        cout << duracion << endl;
+        cout << "------------------------------------" << endl;
     }
 
     temporizador_principal.detener();
 
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "      FIN PROCESO SECUENCIAL    " << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "Tiempo Final:       " << temporizador_principal.formatoTextoFin() << endl;
     cout << "Tiempo Total:       " << temporizador_principal.tiempoTranscurrido() << endl;
     cout << "Tiempo promedio:    " << temporizador_principal.promedioPorProceso() << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     return temporizador_principal;
 }
 
@@ -1073,11 +1068,11 @@ Temporizador mainParalelo(int copias)
     Temporizador temporizador_principal;
     mutex mutex_temporizador;
 
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "    INICIO PROCESO PARALELO     " << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "Tiempo Inicial:     " << temporizador_principal.formatoTextoInicio() << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << endl;
 
     vector<thread> hilos;
@@ -1107,16 +1102,16 @@ Temporizador mainParalelo(int copias)
         if (id < 10)
             cout << " ";
         cout << duracion << endl;
-        cout << "--------------------------------" << endl;
+        cout << "------------------------------------" << endl;
     }
 
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "      FIN PROCESO PARALELO      " << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     cout << "Tiempo Final:       " << temporizador_principal.formatoTextoFin() << endl;
     cout << "Tiempo Total:       " << temporizador_principal.tiempoTranscurrido() << endl;
     cout << "Tiempo promedio:    " << temporizador_principal.promedioPorProceso() << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
     return temporizador_principal;
 }
 
@@ -1134,16 +1129,10 @@ int main()
         cerr << "Error al crear el directorio: " << segundoDirectorio << endl;
     }
 
-    string valor;
-    cout << "Indica el numero de copias a realizar (menor a 50): ";
-    getline(cin, valor);
-    while (!valor.isdigit())
-    {
-        cout << "Error. Ingrese un valor entero: ";
-        getline(cin, valor);
-    }
-
     int N;
+    cout << "Indica el numero de copias a realizar (menor a 50): ";
+    cin >> N;
+    
 
     Temporizador tiempoSecuencial = mainSecuencial(N);
     cout << endl;
@@ -1152,12 +1141,15 @@ int main()
     double tiempoSec = tiempoSecuencial.duracionSegundos();
     double tiempoPar = tiempoParalelo.duracionSegundos();
 
-    double mejora = ((tiempoSec - tiempoPar) / tiempoSec) * 100.0;
+	double diferencia = tiempoSec - tiempoPar;
+    double mejora = ((diferencia) / tiempoSec) * 100.0;
 
+    cout << "====================================" << endl;
+    // Se uso el objeto tiempoSecuencial de forma arbitraria
+    cout << "DIFERENCIA DE TIEMPO: " << tiempoSecuencial.formatearDuracion(diferencia) << endl; 
     cout << fixed << setprecision(2);
-    cout << "================================" << endl;
     cout << "PORCENTAJE DE MEJORA: " << mejora << " %" << endl;
-    cout << "================================" << endl;
+    cout << "====================================" << endl;
 
     return 0;
 }
