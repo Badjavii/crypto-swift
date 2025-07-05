@@ -49,6 +49,51 @@ Se realizaron pruebas con N = 10 procesos. A continuación se presenta una tabla
 | 9       | 00:00:00:081 | 00:00:00:007 |
 | 10      | 00:00:00:074 | 00:00:00:014 |
 
+## Librerias Utilizadas
+
+Durante el desarrollo del proyecto se utilizaron diversas librerias estándar de C++ para facilitar la concurrencia, el manejo de tiempo, la manipulación de archivos y la seguridad criptográfica. A continuación se describen las más relevantes:
+
+### thread
+
+La libreria `<thread>` permite crear y manejar hilos de ejecución en C++. En este proyecto, se utilizó para ejecutar múltiples procesos en paralelo, cada uno en su propio hilo. Esto permite que las tareas se realicen simultáneamente, aprovechando los núcleos del procesador y reduciendo el tiempo total de ejecución.
+
+### mutex
+
+La libreria <mutex> proporciona mecanismos de exclusión mutua para evitar condiciones de carrera. En este proyecto, se utilizó un mutex para proteger el acceso concurrente al objeto Temporizador, que es compartido por todos los hilos.
+
+### chrono
+
+La libreria `<chrono>` permite medir y manipular el tiempo con alta precisión. Se utilizó para capturar marcas de tiempo en milisegundos y microsegundos, calcular duraciones y formatear salidas como `HH:MM:SS:mmmm`.
+
+Para facilitar su uso y encapsular la lógica de medición, se diseñaron dos clases auxiliares:
+
+- **`Hora`**: captura la hora actual con precisión de hasta diezmilésimas de segundo y la formatea en texto legible.
+- **`Temporizador`**: permite registrar múltiples marcas de tiempo, calcular duraciones entre eventos, medir el tiempo total de ejecución y obtener promedios por proceso.
+
+Estas clases abstraen el uso directo de `chrono` y hacen que el código sea más legible, reutilizable y fácil de mantener.
+
+### Otras librerias
+
+- fstream:	Lectura y escritura de archivos.
+- iomanip:	Formato de salida con setw, setfill, etc.
+- sstream:	Construcción de cadenas con ostringstream.
+- memory.h:	Manipulación de memoria (aunque no fue esencial en esta versión).
+- vector:	Estructura de datos dinámica para almacenar hilos y registros de tiempo.
+- utility:	Uso de std::pair para asociar ID de proceso con su duración.
+- cctype:	Validación de caracteres con funciones como isdigit().
+- direct.h:	Creación de directorios con _mkdir() en sistemas Windows.
+
+## Configuracion previa del proyecto
+
+A lo hora de probar el proyecto en las maquinas de los laboratorios de la universidad, se descubrió que los compiladores de dichas maquuionas no estan configuradas para usar versiones de c++ superiores a la v11. Para arreglarlo en DevC++ se hace lo siguiente
+
+- Ir a herramientas > opciones de compilador > compilador
+- una vez ahi, se escribe en el primer cuadro: -std=c++11
+- seleccionar el cuadro que dice "añadir los siguientes comandos cuando llama al compilador"
+- darle a aceptar para finalizar. 
+
+Listo, con eso la maquina podra compilar el codigo fuente sin problemas.
+
 ## Conclusión
 
 La implementación de hilos para ejecutar procesos en paralelo permitió reducir significativamente el tiempo total de ejecución, pasando de 759 ms en modo secuencial a 320 ms en paralelo, con una mejora del 57.76%. La mayoría de los procesos individuales también se completaron más rápido, lo que demuestra la eficiencia de la concurrencia en tareas repetitivas e independientes.

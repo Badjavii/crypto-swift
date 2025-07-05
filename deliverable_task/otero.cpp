@@ -9,7 +9,7 @@
 #include <vector>
 #include <thread>
 #include <utility>
-#include <cctype> // Para validar si N es un valor con isdigit()
+#include <cctype>   // Para validar si N es un valor con isdigit()
 #include <direct.h> // Para crear el directorio usando _mkdir
 using namespace std;
 
@@ -805,22 +805,27 @@ string generarHashArchivo(const string &archivo)
 class Hora
 {
 private:
-    int horas, minutos, segundos, milisegundos;
+    int horas, minutos, segundos, milisegundos4;
 
     void capturarTiempoActual()
     {
-        auto ahora = chrono::system_clock::now();
-        auto time_t_ahora = chrono::system_clock::to_time_t(ahora);
+        using namespace chrono;
+
+        auto ahora = high_resolution_clock::now();
+        auto tiempo_total = ahora.time_since_epoch();
+
+        // Tiempo en segundos enteros
+        auto tiempo_segundos = duration_cast<seconds>(tiempo_total);
+        time_t time_t_ahora = tiempo_segundos.count();
         auto tm = *localtime(&time_t_ahora);
 
         horas = tm.tm_hour;
         minutos = tm.tm_min;
         segundos = tm.tm_sec;
 
-        auto ms = chrono::duration_cast<chrono::milliseconds>(
-                      ahora.time_since_epoch()) %
-                  1000;
-        milisegundos = static_cast<int>(ms.count());
+        // Extraer los microsegundos restantes (hasta 9999)
+        auto micros = duration_cast<microseconds>(tiempo_total) % seconds(1);
+        milisegundos4 = static_cast<int>(micros.count() / 100); // 100us = 0.1ms
     }
 
 public:
@@ -832,13 +837,13 @@ public:
         oss << setfill('0') << setw(2) << horas << ":"
             << setw(2) << minutos << ":"
             << setw(2) << segundos << ":"
-            << setw(4) << milisegundos;
+            << setw(4) << milisegundos4;
         return oss.str();
     }
 
     double tiempoEnSegundos() const
     {
-        return horas * 3600.0 + minutos * 60.0 + segundos + milisegundos / 1000.0;
+        return horas * 3600.0 + minutos * 60.0 + segundos + milisegundos4 / 10000.0;
     }
 };
 
@@ -850,26 +855,25 @@ private:
     bool detenido;
     vector<Hora> registro;
 
-    
-
 public:
-	string formatearDuracion(double t) const
+    string formatearDuracion(double t) const
     {
         int h = static_cast<int>(t / 3600);
         t -= h * 3600;
         int m = static_cast<int>(t / 60);
         t -= m * 60;
         int s = static_cast<int>(t);
-        int ms = static_cast<int>((t - s) * 1000);
+        t -= s;
+        int ms4 = static_cast<int>(t * 10000); // 4 dígitos reales
 
         ostringstream oss;
         oss << setfill('0') << setw(2) << h << ":"
             << setw(2) << m << ":"
             << setw(2) << s << ":"
-            << setw(4) << ms;
+            << setw(4) << ms4;
         return oss.str();
     }
-	
+
     //
     Temporizador()
     {
@@ -1121,18 +1125,19 @@ int main()
     const string segundoDirectorio = "paralelo";
 
     // Crea el directorio
-    if (_mkdir(primerDirectorio.c_str()) != 0) {
-         cerr << "Error al crear el directorio: " << primerDirectorio << endl;
+    if (_mkdir(primerDirectorio.c_str()) != 0)
+    {
+        cerr << "Error al crear el directorio: " << primerDirectorio << endl;
     }
 
-    if (_mkdir(segundoDirectorio.c_str()) != 0) {
+    if (_mkdir(segundoDirectorio.c_str()) != 0)
+    {
         cerr << "Error al crear el directorio: " << segundoDirectorio << endl;
     }
 
     int N;
     cout << "Indica el numero de copias a realizar (menor a 50): ";
     cin >> N;
-    
 
     Temporizador tiempoSecuencial = mainSecuencial(N);
     cout << endl;
@@ -1141,12 +1146,12 @@ int main()
     double tiempoSec = tiempoSecuencial.duracionSegundos();
     double tiempoPar = tiempoParalelo.duracionSegundos();
 
-	double diferencia = tiempoSec - tiempoPar;
+    double diferencia = tiempoSec - tiempoPar;
     double mejora = ((diferencia) / tiempoSec) * 100.0;
 
     cout << "====================================" << endl;
     // Se uso el objeto tiempoSecuencial de forma arbitraria
-    cout << "DIFERENCIA DE TIEMPO: " << tiempoSecuencial.formatearDuracion(diferencia) << endl; 
+    cout << "DIFERENCIA DE TIEMPO: " << tiempoSecuencial.formatearDuracion(diferencia) << endl;
     cout << fixed << setprecision(2);
     cout << "PORCENTAJE DE MEJORA: " << mejora << " %" << endl;
     cout << "====================================" << endl;
